@@ -1,0 +1,21 @@
+# Ambiente virtual
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+
+# Config e secrets
+.env
+
+# Logs e runtime
+logs/
+*.log
+
+# macOS
+.DS_Store
