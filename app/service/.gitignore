@@ -1,0 +1,26 @@
+# Ambiente virtual
+.venv/
+venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+
+# Modelos YOLO (binários grandes)
+*.pt
+*.onnx
+
+# Config e secrets
+.env
+config.json
+
+# Logs e runtime
+logs/
+*.log
+
+# macOS
+.DS_Store
