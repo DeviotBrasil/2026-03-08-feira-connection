@@ -1,0 +1,28 @@
+# Ambientes virtuais Python
+app/service/.venv/
+app/backend/.venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Node
+app/frontend/node_modules/
+
+# Build do frontend
+app/frontend/dist/
+
+# Config e secrets
+.env
+app/service/.env
+app/backend/.env
+
+# Logs e runtime
+logs/
+*.log
+
+# macOS
+.DS_Store
+.DS_Store?
