@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebRTC Backend — Teste</title>
+  <style>
+    body { font-family: monospace; background: #111; color: #eee; padding: 20px; margin: 0; }
+    h1 { color: #4af; margin-bottom: 8px; }
+    #status { margin: 8px 0; padding: 8px; background: #222; border-left: 3px solid #4af; }
+    #fps-counter { font-size: 1.4em; color: #4f4; margin: 8px 0; }
+    video { display: block; max-width: 100%; border: 2px solid #4af; background: #000; }
+    button {
+      margin: 8px 4px 8px 0;
+      padding: 10px 20px;
+      background: #4af;
+      color: #000;
+      border: none;
+      cursor: pointer;
+      font-size: 1em;
+      font-family: monospace;
+    }
+    #health-box { margin-top: 12px; padding: 10px; background: #1a1a2e; white-space: pre; font-size: 0.9em; }
+    #zmq-alert { display:none; margin: 6px 0; padding: 8px; background: #3a1010; border-left: 3px solid #f44; }
+  </style>
+</head>
+<body>
+  <h1>WebRTC Backend — Página de Teste</h1>
+  <div id="status">Aguardando conexão...</div>
+  <div id="fps-counter">FPS: —</div>
+  <video id="video" autoplay playsinline muted width="640" height="480"></video>
+  <br>
+  <button id="btn-connect" onclick="connect()">Conectar WebRTC</button>
+  <button id="btn-disconnect" onclick="disconnect()" disabled>Desconectar</button>
+  <button onclick="fetchHealth()">Atualizar /health</button>
+  <div id="zmq-alert">⚠ ZMQ desconectado — vision-service não está publicando frames. Vídeo ficará preto.</div>
+  <div id="health-box">Carregando /health...</div>
+
+  <script>
+    const BACKEND = 'http://localhost:8080';
+    let pc = null;
+    let frameCount = 0;
+    let lastFpsTs = performance.now();
+    let rafId = null;
+    let trackConnected = false;
+
+    function setStatus(msg, color) {
+      const el = document.getElementById('status');
+      el.textContent = msg;
+      el.style.borderLeftColor = color || '#4af';
+    }
+
+    // Atualiza o display de FPS — chamado tanto pelo RAF quanto pelo rVFC
+    function updateFpsDisplay() {
+      const now = performance.now();
+      if (now - lastFpsTs >= 1000) {
+        const fps = (frameCount * 1000 / (now - lastFpsTs)).toFixed(1);
+        document.getElementById('fps-counter').textContent = 'FPS: ' + fps;
+        frameCount = 0;
+        lastFpsTs = now;
+      }
+    }
+
+    function countFps() {
+      updateFpsDisplay();
+      rafId = requestAnimationFrame(countFps);
+    }
+
+    async function connect() {
+      document.getElementById('btn-connect').disabled = true;
+      setStatus('Criando RTCPeerConnection...', '#fa4');
+
+      pc = new RTCPeerConnection({ iceServers: [] });
+
+      pc.ontrack = (event) => {
+        trackConnected = true;
+        const video = document.getElementById('video');
+        // Fallback: alguns backends nao enviam MSID e event.streams fica vazio
+        if (event.streams && event.streams.length > 0) {
+          video.srcObject = event.streams[0];
+        } else {
+          const stream = new MediaStream([event.track]);
+          video.srcObject = stream;
+        }
+        // Chamar play() explicitamente para garantir reprodução (autoplay policy)
+        video.play().catch(e => console.warn('video.play() falhou:', e));
+        setStatus('Stream recebido — vídeo ativo', '#4f4');
+        if (rafId) cancelAnimationFrame(rafId);
+        frameCount = 0;
+        lastFpsTs = performance.now();
+        rafId = requestAnimationFrame(countFps);
+
+        // requestVideoFrameCallback conta frames reais; RAF continua para
+        // atualizar o display mesmo quando não chegam novos frames
+        if (video.requestVideoFrameCallback) {
+          function onFrame() {
+            frameCount++;
+            video.requestVideoFrameCallback(onFrame);
+          }
+          video.requestVideoFrameCallback(onFrame);
+          // NAO cancela o RAF — ele segue atualizando o display periodicamente
+        }
+      };
+
+      pc.oniceconnectionstatechange = () => {
+        // Nao sobrescreve o status de "Stream recebido" se ja tiver track
+        if (!trackConnected) {
+          setStatus('ICE: ' + pc.iceConnectionState, pc.iceConnectionState === 'connected' ? '#4f4' : '#fa4');
+        }
+      };
+
+      pc.onconnectionstatechange = () => {
+        const state = pc.connectionState;
+        if (state === 'failed' || state === 'closed') {
+          setStatus('Conexão encerrada: ' + state, '#f44');
+          document.getElementById('btn-connect').disabled = false;
+          document.getElementById('btn-disconnect').disabled = true;
+        }
+      };
+
+      // Adicionar transceiver para receber vídeo (direction: recvonly)
+      pc.addTransceiver('video', { direction: 'recvonly' });
+
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+
+      setStatus('Enviando offer para ' + BACKEND + '/offer ...', '#fa4');
+
+      let resp;
+      try {
+        resp = await fetch(BACKEND + '/offer', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sdp: offer.sdp, type: offer.type }),
+        });
+      } catch (err) {
+        setStatus('Erro ao conectar no backend: ' + err.message, '#f44');
+        document.getElementById('btn-connect').disabled = false;
+        return;
+      }
+
+      if (!resp.ok) {
+        setStatus('Erro HTTP ' + resp.status + ' do backend', '#f44');
+        document.getElementById('btn-connect').disabled = false;
+        return;
+      }
+
+      const answer = await resp.json();
+      await pc.setRemoteDescription(new RTCSessionDescription(answer));
+      document.getElementById('btn-disconnect').disabled = false;
+      if (!trackConnected) {
+        setStatus('SDP answer recebido — aguardando stream...', '#fa4');
+      }
+    }
+
+    async function disconnect() {
+      trackConnected = false;
+      if (pc) {
+        pc.close();
+        pc = null;
+      }
+      const video = document.getElementById('video');
+      video.srcObject = null;
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      document.getElementById('fps-counter').textContent = 'FPS: —';
+      document.getElementById('btn-connect').disabled = false;
+      document.getElementById('btn-disconnect').disabled = true;
+      setStatus('Desconectado.', '#aaa');
+    }
+
+    async function fetchHealth() {
+      try {
+        const resp = await fetch(BACKEND + '/health');
+        const data = await resp.json();
+        document.getElementById('health-box').textContent = JSON.stringify(data, null, 2);
+        const alert = document.getElementById('zmq-alert');
+        alert.style.display = data.zmq_connected ? 'none' : 'block';
+      } catch (err) {
+        document.getElementById('health-box').textContent = 'Erro ao buscar /health: ' + err.message;
+      }
+    }
+
+    // Buscar health na carga e a cada 5s
+    fetchHealth();
+    setInterval(fetchHealth, 5000);
+  </script>
+</body>
+</html>
