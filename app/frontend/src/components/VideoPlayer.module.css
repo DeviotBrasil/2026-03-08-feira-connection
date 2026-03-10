@@ -1,0 +1,36 @@
+.wrapper {
+  position: relative;
+  line-height: 0;
+}
+
+.video {
+  width: 100%;
+  max-width: 960px;
+  max-height: 100vh;
+  object-fit: contain;
+  background: #000;
+  display: block;
+}
+
+.fullscreenBtn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+  backdrop-filter: blur(4px);
+  color: #fff !important;
+  background: rgba(0, 0, 0, 0.55) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+}
+
+.wrapper:hover .fullscreenBtn {
+  opacity: 1;
+}
+
+/* Em touch devices o botão fica sempre visível */
+@media (hover: none) {
+  .fullscreenBtn {
+    opacity: 1;
+  }
+}

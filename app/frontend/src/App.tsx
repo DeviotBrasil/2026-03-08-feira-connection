@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { Layout, Row, Col } from 'antd';
 import { Header } from './components/Header';
 import { VideoPlayer } from './components/VideoPlayer';
 import { StatusBar } from './components/StatusBar';
@@ -6,6 +7,7 @@ import { HealthPanel } from './components/HealthPanel';
 import { useWebRTC } from './hooks/useWebRTC';
 import { useHealthPolling } from './hooks/useHealthPolling';
 import type { BackendConfig } from './types';
+import styles from './App.module.css';
 
 function resolveBackendConfig(): BackendConfig {
   const params = new URLSearchParams(window.location.search);
@@ -21,33 +23,12 @@ function App() {
   const isReconnecting = connectionState === 'connecting' || connectionState === 'reconnecting';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--bg-page)' }}>
+    <Layout className={styles.root}>
       <Header />
 
-      {/* Área principal — vídeo centralizado */}
-      <main
-        style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '24px 16px 16px',
-          gap: 12,
-        }}
-      >
+      <Layout.Content className={styles.content}>
         {/* Wrapper do vídeo com borda de acento */}
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            maxWidth: '960px',
-            borderRadius: 8,
-            overflow: 'hidden',
-            border: '1px solid var(--border-subtle)',
-            boxShadow: '0 4px 24px rgba(0, 0, 0, 0.18)',
-          }}
-        >
+        <div className={styles.videoWrapper}>
           <VideoPlayer videoRef={videoRef} />
 
           {connectionState !== 'connected' && (
@@ -61,13 +42,21 @@ function App() {
           )}
         </div>
 
-        {/* Barra de status e painel de saúde */}
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center', width: '100%', maxWidth: 960 }}>
-          <StatusBar connectionState={connectionState} streamStats={streamStats} />
-          <HealthPanel health={health} healthError={healthError} />
-        </div>
-      </main>
-    </div>
+        {/* Barra de status e painel de saúde — responsivo */}
+        <Row
+          gutter={[8, 8]}
+          justify="center"
+          className={styles.bottomRow}
+        >
+          <Col xs={24} sm={24} md="auto">
+            <StatusBar connectionState={connectionState} streamStats={streamStats} />
+          </Col>
+          <Col xs={24} sm={24} md="auto" className={styles.bottomColHealth}>
+            <HealthPanel health={health} healthError={healthError} />
+          </Col>
+        </Row>
+      </Layout.Content>
+    </Layout>
   );
 }
 

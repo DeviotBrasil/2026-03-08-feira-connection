@@ -1,4 +1,6 @@
+import { Alert, Badge, Card, Skeleton, Statistic } from 'antd';
 import type { HealthData } from '../types';
+import styles from './HealthPanel.module.css';
 
 interface HealthPanelProps {
   health: HealthData | null;
@@ -21,55 +23,81 @@ function fmtUptime(seconds: number): string {
 export function HealthPanel({ health, healthError }: HealthPanelProps) {
   if (healthError) {
     return (
-      <div className="health-panel">
-        <span style={{ color: '#e53935', fontSize: '0.75rem' }}>Backend inacessível</span>
-      </div>
+      <Alert
+        type="error"
+        message="Backend inacessível"
+        showIcon
+        className={styles.errorAlert}
+      />
     );
   }
 
   if (!health) {
     return (
-      <div className="health-panel">
-        <span style={{ color: 'var(--text-secondary)', fontSize: '0.75rem' }}>Carregando…</span>
-      </div>
+      <Card size="small" className={styles.panel}>
+        <Skeleton active paragraph={{ rows: 1 }} title={false} />
+      </Card>
     );
   }
 
-  const okColor = 'var(--brand-green)';
-  const warnColor = '#f0a500';
-  const errColor = '#e53935';
+  const okColor = '#5FED00';
+  const warnColor = '#faad14';
+  const errColor = '#ff4d4f';
 
   return (
-    <div className="health-panel">
-      <Item
-        label="Backend"
-        value={health.status.toUpperCase()}
-        color={health.status === 'ok' ? okColor : warnColor}
-      />
-      <Item
-        label="ZMQ"
-        value={health.zmq_connected ? 'ok' : 'offline'}
-        color={health.zmq_connected ? okColor : errColor}
-      />
-      <Item label="Peers" value={String(health.peers_active)} />
-      <Item
-        label="FPS ZMQ"
-        value={fmt(health.fps_recent)}
-        color={health.fps_below_threshold ? warnColor : undefined}
-      />
-      <Item label="Frames" value={String(health.frames_received)} />
-      <Item label="Uptime" value={fmtUptime(health.uptime_seconds)} />
-    </div>
-  );
-}
-
-function Item({ label, value, color }: { label: string; value: string; color?: string }) {
-  return (
-    <div className="health-item">
-      <span className="health-item__label">{label}</span>
-      <span className="health-item__value" style={color ? { color } : undefined}>
-        {value}
-      </span>
-    </div>
+    <Card
+      size="small"
+      className={styles.panel}
+    >
+      <div className={styles.metricsRow}>
+        <div className={styles.metricItem}>
+          <Badge
+            status={health.status === 'ok' ? 'success' : 'warning'}
+            text={
+              <Statistic
+                title="Backend"
+                value={health.status.toUpperCase()}
+                valueStyle={{ color: health.status === 'ok' ? okColor : warnColor, fontSize: '0.85rem' }}
+              />
+            }
+          />
+        </div>
+        <div className={styles.metricItem}>
+          <Statistic
+            title="ZMQ"
+            value={health.zmq_connected ? 'ok' : 'offline'}
+            valueStyle={{ color: health.zmq_connected ? okColor : errColor, fontSize: '0.85rem' }}
+          />
+        </div>
+        <div className={styles.metricItem}>
+          <Statistic
+            title="Peers"
+            value={health.peers_active}
+            valueStyle={{ fontSize: '0.85rem' }}
+          />
+        </div>
+        <div className={styles.metricItem}>
+          <Statistic
+            title="FPS ZMQ"
+            value={fmt(health.fps_recent)}
+            valueStyle={{ color: health.fps_below_threshold ? warnColor : okColor, fontSize: '0.85rem' }}
+          />
+        </div>
+        <div className={styles.metricItem}>
+          <Statistic
+            title="Frames"
+            value={health.frames_received}
+            valueStyle={{ fontSize: '0.85rem' }}
+          />
+        </div>
+        <div className={styles.metricItem}>
+          <Statistic
+            title="Uptime"
+            value={fmtUptime(health.uptime_seconds)}
+            valueStyle={{ fontSize: '0.85rem' }}
+          />
+        </div>
+      </div>
+    </Card>
   );
 }
