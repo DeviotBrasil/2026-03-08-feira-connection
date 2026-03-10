@@ -1,66 +1,63 @@
-Visão Geral
-A Jornada Técnica do Setor Alimentício é um evento de referência voltado para a atualização, networking e geração de negócios na indústria de alimentos. Em 2026, o evento chega à sua 7ª edição, consolidando-se como um ponto de encontro estratégico entre profissionais, fornecedores e acadêmicos.
+1. O que é a Mercoagro?
+A Mercoagro (Feira Internacional de Negócios, Processamento e Industrialização da Carne) é considerada a maior feira do setor de proteína animal da América Latina. Realizada desde 1996 em Chapecó (SC), o evento é o principal ponto de encontro global para a indústria de carnes, focando em tecnologia, inovação e geração de negócios.
 
-Data: 12 a 14 de maio de 2026.
+Organização: Associação Comercial, Industrial, Agronegócio e Serviços de Chapecó (ACIC).
 
-Local: Clube Tiro e Caça, Lajeado - RS.
+Frequência: Bienal (a cada dois anos).
 
-Edição Atual: 7ª Edição.
+2. Próxima Edição: Mercoagro 2026
+Originalmente planejada para 2025, a 14ª edição foi reprogramada para permitir obras de modernização e ampliação do parque de exposições.
 
-🎯 Objetivos do Evento
-Qualificação: Atualizar profissionais sobre as tendências e exigências do mercado.
+Data: 17 a 20 de março de 2026.
 
-Networking: Estimular a troca de experiências e o fluxo de informações entre especialistas.
+Local: Parque de Exposições Dr. Valmor Ernesto Lunardi (Efapi), Chapecó - SC.
 
-Negócios: Aproximar indústrias de alimentos de fornecedores de ingredientes, máquinas e tecnologias.
+Horário de Visitação: Geralmente das 14h às 21h.
 
-👥 Público-Alvo
-O evento é destinado a diversos perfis do setor alimentício, incluindo:
+3. Pilares Estratégicos
+A feira se sustenta em três eixos principais:
 
-Técnicos e engenheiros de alimentos.
+Negócios: Conexão direta entre fornecedores globais e frigoríficos/agroindústrias.
 
-Gestores e diretores industriais.
+Relacionamento: Networking qualificado com tomadores de decisão de diversos países (foco especial na América Latina).
 
-Compradores e profissionais de suprimentos.
+Conhecimento: Difusão de tecnologias de ponta e tendências de mercado através de seminários técnicos e laboratórios de inovação.
 
-Estudantes e pesquisadores da área.
+4. Números e Impacto (Estimativas para 2026)
+Expectativa de Público: Mais de 25.000 visitantes qualificados (compradores, engenheiros, tecnólogos e empresários).
 
-🏗️ Estrutura da Programação
-A Jornada é composta por diferentes trilhas de conhecimento e espaços de exposição:
+Expositores: Cerca de 250 estandes representando mais de 700 marcas mundiais.
 
-Palestras e Workshops: Focados em inovação, pesquisa e novos produtos.
+Projeção de Negócios: Superar a marca de R$ 1 bilhão em contratos (nacionais e internacionais).
 
-Seminários Temáticos:
+Presença Global: Países como Alemanha, Argentina, Áustria, China, EUA, França, Itália e Uruguai costumam estar presentes.
 
-Workshop de Alimentos.
+5. Setores Expostos
+A feira abrange toda a cadeia de processamento de proteína animal (bovinos, suínos, aves e peixes):
 
-Seminário de Segurança de Alimentos.
+Máquinas e equipamentos para abate e processamento.
 
-Seminário de Lácteos.
+Embalagens e sistemas de envase.
 
-Salão do Expositor: Espaço simultâneo com marcas de ingredientes, aromas, soluções em equipamentos e sustentabilidade.
+Ingredientes, aditivos e condimentos.
 
-🤝 Organização e Parcerias
-O evento é promovido por uma coalizão de entidades técnicas e comerciais:
+Automação industrial e softwares de gestão.
 
-ACIL: Associação Comercial e Industrial de Lajeado.
+Logística e transporte refrigerado.
 
-GTA: Grupo Técnico em Alimentos.
+Tratamento de efluentes e sustentabilidade.
 
-GTPA: Grupo Técnico de Proteína Animal.
+Segurança alimentar e controle de qualidade.
 
-📈 Histórico de Crescimento
-O evento apresenta uma curva de crescimento constante em número de participantes:
+6. Por que Chapecó?
+A cidade é conhecida como a Capital Brasileira da Agroindústria. A região Oeste de Santa Catarina possui a maior concentração de frigoríficos do mundo e é sede de algumas das maiores empresas globais do setor, tornando o local estrategicamente perfeito para o evento.
 
-1ª Edição (2017): +300 inscrições.
+7. Informações de Contato e Vendas
+Para empresas interessadas em expor ou patrocínios:
 
-4ª Edição (2022): 900 inscrições.
+Site oficial: mercoagro.com.br
 
-6ª Edição (2025): +1.000 inscrições.
+Comercialização: Gerenciada pela ACIC Chapecó. Devido à alta demanda, costuma haver fila de espera para novos expositores.
 
-📞 Informações de Contato
-Endereço: Rua Silva Jardim, 96 - Centro, Lajeado - RS.
-
-Telefone: (51) 3011-6900.
-
-Site Oficial: jornadaalimentaacao.com.br
+💡 Dica para Visitantes
+O evento é focado em público B2B (Business to Business). É recomendável realizar o pré-credenciamento pelo site oficial para evitar filas e garantir o acesso aos fóruns de conhecimento que ocorrem paralelamente à exposição.

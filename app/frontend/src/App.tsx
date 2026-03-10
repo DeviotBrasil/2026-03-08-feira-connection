@@ -36,10 +36,10 @@ function App() {
     <Layout className={styles.root}>
       <Header isDark={isDark} onToggleTheme={() => setIsDark(d => !d)} />
 
-      <Layout>
+      <Layout style={{ overflow: 'hidden', minHeight: 0 }}>
         <Sidebar isDark={isDark} activePage={activePage} onNavigate={setActivePage} />
 
-        <Layout.Content className={styles.content}>
+        <Layout.Content className={styles.content} style={{ overflow: 'hidden' }}>
           {/* Câmera: sempre montada para o WebRTC não perder o stream */}
           <div style={{ display: activePage === 'camera' ? 'contents' : 'none' }}>
             <div className={styles.videoWrapper}>
