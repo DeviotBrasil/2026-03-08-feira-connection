@@ -69,7 +69,27 @@ info "$MODS módulos instalados em node_modules/"
 
 ok "app/frontend pronto"
 
-# ── Resumo ─────────────────────────────────────────────────────────────────────
+# ── Ollama (runtime do Llama 3.1) ─────────────────────────────────────────────
+step "[4/4] Setup: Ollama + Llama 3.1"
+
+if ! command -v ollama &>/dev/null; then
+  echo "│  AVISO: ollama não encontrado no PATH."
+  echo "│  Instale via: brew install ollama  (macOS) ou  curl -fsSL https://ollama.com/install.sh | sh  (Linux)"
+  echo "└─ ⚠️  Ollama não instalado — o chat de IA não estará disponível."
+else
+  OLLAMA_VERSION=$(ollama --version 2>&1 | head -1)
+  info "Ollama → $OLLAMA_VERSION"
+
+  # Verifica se o modelo já está baixado
+  if ollama list 2>/dev/null | grep -q 'llama3.1'; then
+    info "Modelo llama3.1 já presente."
+  else
+    info "Baixando modelo llama3.1 (~4.7 GB) — pode demorar alguns minutos..."
+    ollama pull llama3.1
+  fi
+
+  ok "Ollama + Llama 3.1 pronto"
+fi───────────────────
 echo ""
 echo "══════════════════════════════════════"
 echo "  Setup concluído com sucesso ✓"
@@ -78,5 +98,6 @@ echo ""
 echo "Próximos passos:"
 echo "  1. cp app/service/.env.example app/service/.env   # ajustar CAMERA_DEVICE_INDEX"
 echo "  2. bash start.sh                                  # iniciar todos os serviços"
+echo "  Obs: o chat de IA requer o Ollama rodando (iniciado automaticamente por start.sh)"
 echo ""
 

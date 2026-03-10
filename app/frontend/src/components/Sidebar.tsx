@@ -17,7 +17,7 @@ const menuItems = [
   {
     key: 'chat',
     icon: <MessageOutlined />,
-    label: 'Chat',
+    label: 'Chat Gen/IA',
   },
 ];
 

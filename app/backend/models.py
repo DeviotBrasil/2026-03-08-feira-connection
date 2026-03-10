@@ -1,5 +1,23 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from typing import Literal
+
+
+class ChatMessage(BaseModel):
+    role: Literal["user", "assistant"]
+    content: str
+
+
+class ChatRequest(BaseModel):
+    messages: list[ChatMessage]
+
+    @field_validator("messages")
+    @classmethod
+    def messages_not_empty(cls, v: list[ChatMessage]) -> list[ChatMessage]:
+        if not v:
+            raise ValueError("messages must not be empty")
+        if v[-1].role != "user":
+            raise ValueError("last message must have role 'user'")
+        return v
 
 
 class OfferRequest(BaseModel):

@@ -7,12 +7,15 @@ SERVICE_PID=""
 BACKEND_PID=""
 FRONTEND_PID=""
 
+OLLAMA_PID=""
+
 stop_all() {
   echo ""
   echo "Encerrando processos..."
   [ -n "$FRONTEND_PID" ] && kill "$FRONTEND_PID" 2>/dev/null
   [ -n "$BACKEND_PID" ]  && kill "$BACKEND_PID"  2>/dev/null
   [ -n "$SERVICE_PID" ]  && kill "$SERVICE_PID"  2>/dev/null
+  [ -n "$OLLAMA_PID" ]   && kill "$OLLAMA_PID"   2>/dev/null
   wait 2>/dev/null
   echo "Encerrado."
   exit 0
@@ -39,6 +42,21 @@ wait_http() {
   echo " pronto"
 }
 
+# ── 0. Ollama ─────────────────────────────────────────────────────
+if command -v ollama &>/dev/null; then
+  # Só inicia se ainda não estiver respondendo
+  if curl -sf http://localhost:11434/api/tags > /dev/null 2>&1; then
+    echo "▶  [0/3] Ollama já está rodando."
+  else
+    echo "▶  [0/3] Iniciando Ollama (Llama 3.1)..."
+    ollama serve &
+    OLLAMA_PID=$!
+    wait_http "http://localhost:11434/api/tags" "ollama" 30
+  fi
+else
+  echo "⚠️  Ollama não encontrado — chat de IA indisponível (execute setup.sh para instalar)."
+fi
+
 # ── 1. Service ─────────────────────────────────────────────────────────────────
 echo ""
 echo "▶  [1/3] Iniciando app/service..."
@@ -62,6 +80,7 @@ FRONTEND_PID=$!
 
 echo ""
 echo "Sistema em execução:"
+echo "  ollama    PID ${OLLAMA_PID:-(externo)}  →  http://localhost:11434"
 echo "  service   PID $SERVICE_PID   →  http://localhost:8000/health"
 echo "  backend   PID $BACKEND_PID   →  http://localhost:8080/health"
 echo "  frontend  PID $FRONTEND_PID  →  http://localhost:5173"

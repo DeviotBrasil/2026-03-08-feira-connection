@@ -29,3 +29,19 @@ export interface StreamStats {
 export interface BackendConfig {
   url: string;
 }
+
+// ChatMessage — unidade atômica de conversa (espelha ChatMessage do backend + metadados de UI)
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: number;
+  streaming?: boolean;
+}
+
+// ChatChunk — evento SSE emitido pelo endpoint POST /chat
+export interface ChatChunk {
+  content: string;
+  done: boolean;
+  error?: string;
+}

@@ -1,15 +1,19 @@
 import asyncio
+import json
 import logging
 import time
 from uuid import uuid4
 
+import httpx
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from aiortc import RTCPeerConnection, RTCSessionDescription
 
 from config import settings
 from distributor import FrameDistributor
-from models import AnswerResponse, HealthStatus, OfferRequest
+from models import AnswerResponse, ChatRequest, HealthStatus, OfferRequest
+from rag import build_system_prompt
 from webrtc_track import QueuedVideoTrack
 from zmq_subscriber import ZMQSubscriber
 
@@ -81,6 +85,50 @@ async def offer(request: OfferRequest) -> AnswerResponse:
             logger.warning("ICE gathering timeout para peer %s — retornando SDP parcial", peer_id)
 
     return AnswerResponse(sdp=pc.localDescription.sdp, type=pc.localDescription.type)
+
+
+@app.post("/chat")
+async def chat(request: ChatRequest) -> StreamingResponse:
+    """Encaminha mensagens ao Ollama com system prompt RAG e transmite resposta via SSE."""
+    system_prompt = build_system_prompt()
+    payload = {
+        "model": settings.OLLAMA_MODEL,
+        "messages": [{"role": "system", "content": system_prompt}]
+        + [m.model_dump() for m in request.messages],
+        "stream": True,
+    }
+
+    async def event_stream():
+        try:
+            async with httpx.AsyncClient() as client:
+                async with client.stream(
+                    "POST",
+                    f"{settings.OLLAMA_URL}/api/chat",
+                    json=payload,
+                    timeout=settings.OLLAMA_TIMEOUT,
+                ) as resp:
+                    if resp.status_code != 200:
+                        yield f'data: {{"error": "Ollama returned {resp.status_code}", "done": true}}\n\n'
+                        return
+                    async for line in resp.aiter_lines():
+                        if not line:
+                            continue
+                        chunk = json.loads(line)
+                        content = chunk.get("message", {}).get("content", "")
+                        done = chunk.get("done", False)
+                        yield f'data: {json.dumps({"content": content, "done": done})}\n\n'
+                        if done:
+                            break
+        except httpx.ConnectError:
+            yield 'data: {"error": "Ollama service unavailable", "done": true}\n\n'
+        except httpx.TimeoutException:
+            yield 'data: {"error": "Model response timeout", "done": true}\n\n'
+
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
 
 
 @app.get("/health", response_model=HealthStatus)
