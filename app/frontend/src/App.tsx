@@ -1,11 +1,17 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { ConfigProvider, Layout, Row, Col } from 'antd';
 import { Header } from './components/Header';
+import { Sidebar } from './components/Sidebar';
+import type { Page } from './components/Sidebar';
 import { VideoPlayer } from './components/VideoPlayer';
 import { StatusBar } from './components/StatusBar';
 import { HealthPanel } from './components/HealthPanel';
+import { ChatPage } from './pages/ChatPage';
 import { useWebRTC } from './hooks/useWebRTC';
 import { useHealthPolling } from './hooks/useHealthPolling';
 import type { BackendConfig } from './types';
+import { lightTheme, darkTheme } from './theme';
+import styles from './App.module.css';
 
 function resolveBackendConfig(): BackendConfig {
   const params = new URLSearchParams(window.location.search);
@@ -14,6 +20,11 @@ function resolveBackendConfig(): BackendConfig {
 }
 
 function App() {
+  const [isDark, setIsDark] = useState(false);
+  const [activePage, setActivePage] = useState<Page>('camera');
+  useEffect(() => {
+    document.body.dataset.theme = isDark ? 'dark' : 'light';
+  }, [isDark]);
   const config = useMemo(resolveBackendConfig, []);
   const { videoRef, connectionState, streamStats } = useWebRTC(config);
   const { health, healthError } = useHealthPolling(config);
@@ -21,53 +32,46 @@ function App() {
   const isReconnecting = connectionState === 'connecting' || connectionState === 'reconnecting';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: 'var(--bg-page)' }}>
-      <Header />
+    <ConfigProvider theme={isDark ? darkTheme : lightTheme}>
+    <Layout className={styles.root}>
+      <Header isDark={isDark} onToggleTheme={() => setIsDark(d => !d)} />
 
-      {/* Área principal — vídeo centralizado */}
-      <main
-        style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '24px 16px 16px',
-          gap: 12,
-        }}
-      >
-        {/* Wrapper do vídeo com borda de acento */}
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            maxWidth: '960px',
-            borderRadius: 8,
-            overflow: 'hidden',
-            border: '1px solid var(--border-subtle)',
-            boxShadow: '0 4px 24px rgba(0, 0, 0, 0.18)',
-          }}
-        >
-          <VideoPlayer videoRef={videoRef} />
+      <Layout>
+        <Sidebar isDark={isDark} activePage={activePage} onNavigate={setActivePage} />
 
-          {connectionState !== 'connected' && (
-            <div className={`video-overlay${isReconnecting ? ' video-overlay--reconnecting' : ''}`}>
-              {connectionState === 'connecting' && 'Conectando…'}
-              {connectionState === 'reconnecting' && 'Reconectando…'}
-              {connectionState === 'failed' && 'Falha na conexão'}
-              {connectionState === 'idle' && 'Aguardando…'}
-              {connectionState === 'disconnected' && 'Desconectado'}
+        <Layout.Content className={styles.content}>
+          {/* Câmera: sempre montada para o WebRTC não perder o stream */}
+          <div style={{ display: activePage === 'camera' ? 'contents' : 'none' }}>
+            <div className={styles.videoWrapper}>
+              <VideoPlayer videoRef={videoRef} />
+
+              {connectionState !== 'connected' && (
+                <div className={`video-overlay${isReconnecting ? ' video-overlay--reconnecting' : ''}`}>
+                  {connectionState === 'connecting' && 'Conectando…'}
+                  {connectionState === 'reconnecting' && 'Reconectando…'}
+                  {connectionState === 'failed' && 'Falha na conexão'}
+                  {connectionState === 'idle' && 'Aguardando…'}
+                  {connectionState === 'disconnected' && 'Desconectado'}
+                </div>
+              )}
             </div>
-          )}
-        </div>
 
-        {/* Barra de status e painel de saúde */}
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center', width: '100%', maxWidth: 960 }}>
-          <StatusBar connectionState={connectionState} streamStats={streamStats} />
-          <HealthPanel health={health} healthError={healthError} />
-        </div>
-      </main>
-    </div>
+            {/* Barra de status e painel de saúde — responsivo */}
+            <Row gutter={[8, 8]} justify="center" className={styles.bottomRow}>
+              <Col xs={24} sm={24} md="auto">
+                <StatusBar connectionState={connectionState} streamStats={streamStats} />
+              </Col>
+              <Col xs={24} sm={24} md="auto" className={styles.bottomColHealth}>
+                <HealthPanel health={health} healthError={healthError} />
+              </Col>
+            </Row>
+          </div>
+
+          {activePage === 'chat' && <ChatPage />}
+      </Layout.Content>
+      </Layout>
+    </Layout>
+    </ConfigProvider>
   );
 }
 

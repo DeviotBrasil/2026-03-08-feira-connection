@@ -1,21 +1,14 @@
 /* ── Variáveis de marca ─────────────────────────────────────────── */
 :root {
-  --brand-green:      #5FED00;
-  --brand-green-dim:  rgba(95, 237, 0, 0.18);
-  --brand-green-glow: rgba(95, 237, 0, 0.35);
-  --bg-page:          #0a0a0a;
-  --bg-surface:       #141414;
-  --bg-surface-2:     #1c1c1c;
-  --text-primary:     #ffffff;
-  --text-secondary:   rgba(255, 255, 255, 0.55);
-  --border-subtle:    rgba(95, 237, 0, 0.22);
+  --brand-green:      #6bbf3e;
+  --brand-green-dim:  rgba(107, 191, 62, 0.15);
+  --brand-green-glow: rgba(107, 191, 62, 0.20);
+  --border-subtle:    rgba(107, 191, 62, 0.18);
 
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color-scheme: dark;
-  color: var(--text-primary);
-  background-color: var(--bg-page);
+  color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -28,94 +21,6 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: var(--bg-page);
-}
-
-/* ── Header ─────────────────────────────────────────────────────── */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: #ffffff;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 14px 0 0;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
-}
-
-.site-header__logo {
-  height: 56px;
-  width: auto;
-  object-fit: contain;
-  display: block;
-  padding: 0 24px;
-}
-
-.site-header__accent {
-  width: 100%;
-  height: 3px;
-  margin-top: 14px;
-  background: var(--brand-green);
-  box-shadow: 0 0 12px var(--brand-green-glow);
-}
-
-/* ── Status bar ──────────────────────────────────────────────────── */
-.status-bar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 5px 14px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 6px;
-  font-size: 0.78rem;
-  color: var(--text-secondary);
-}
-
-.status-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.status-dot--spin {
-  border: 2px solid var(--brand-green);
-  border-top-color: transparent;
-  animation: spin 0.8s linear infinite;
-}
-
-/* ── Health panel ────────────────────────────────────────────────── */
-.health-panel {
-  display: flex;
-  gap: 20px;
-  padding: 6px 16px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 6px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.health-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 52px;
-}
-
-.health-item__label {
-  font-size: 0.62rem;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.health-item__value {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--text-primary);
 }
 
 /* ── Video overlay ───────────────────────────────────────────────── */

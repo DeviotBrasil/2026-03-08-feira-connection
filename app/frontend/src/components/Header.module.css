@@ -1,0 +1,47 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex !important;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+  height: 100px !important;
+  line-height: 1 !important;
+}
+
+.logo {
+  height: 56px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.accent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #6bbf3e;
+}
+
+.accentDark {
+  background: #6b6b6b;
+}
+
+.themeToggle {
+  font-size: 18px !important;
+}
+
+@media (max-width: 575px) {
+  .header {
+    padding: 0 12px !important;
+  }
+
+  .logo {
+    height: 44px;
+  }
+}

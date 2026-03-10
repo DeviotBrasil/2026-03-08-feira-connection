@@ -1,0 +1,110 @@
+.errorAlert {
+  border-radius: 6px;
+}
+
+.panel {
+  width: 100%;
+}
+
+.metricsRow {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0;
+}
+
+.metricItem {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 2px 14px;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] .metricItem {
+  border-right-color: rgba(255, 255, 255, 0.1);
+}
+
+.metricItem:first-child {
+  padding-left: 0;
+}
+
+.metricItem:last-child {
+  padding-right: 0;
+  border-right: none;
+}
+
+.metricLabel {
+  font-size: 0.68rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(0, 0, 0, 0.45);
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .metricLabel {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.metricValue {
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.dotOk {
+  background: #6bbf3e;
+}
+
+.dotWarn {
+  background: #f0c060;
+}
+
+.dotErr {
+  background: #e8857a;
+}
+
+@media (max-width: 767px) {
+  .metricsRow {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px 0;
+  }
+
+  .metricItem:nth-child(3),
+  .metricItem:last-child {
+    border-right: none;
+  }
+
+  .metricItem:nth-child(4) {
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 400px) {
+  .metricsRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .metricItem:nth-child(2),
+  .metricItem:nth-child(4),
+  .metricItem:last-child {
+    border-right: none;
+  }
+
+  .metricItem:nth-child(3),
+  .metricItem:nth-child(5) {
+    padding-left: 0;
+  }
+}

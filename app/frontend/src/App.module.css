@@ -1,0 +1,30 @@
+.root {
+  min-height: 100vh;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px 16px;
+  gap: 12px;
+}
+
+.videoWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 960px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.bottomRow {
+  width: 100%;
+  max-width: 960px;
+}
+
+.bottomColHealth {
+  flex: 1;
+}
