@@ -8,6 +8,7 @@ import uvicorn
 import api
 from config import settings
 from distributor import FrameDistributor
+from rag import load_kb
 from zmq_subscriber import ZMQSubscriber
 
 logger = logging.getLogger(__name__)
@@ -47,6 +48,9 @@ async def lifespan(app):
         distributor=dist,
         threshold_s=settings.ZMQ_CONNECTED_THRESHOLD_S,
     )
+
+    # Carregar base de conhecimento RAG (falha rápida se o arquivo não existir)
+    load_kb(settings.KB_PATH)
 
     # Injetar singletons no módulo api
     api.distributor = dist

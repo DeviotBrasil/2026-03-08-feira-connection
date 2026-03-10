@@ -13,6 +13,7 @@ export default defineConfig({
     proxy: {
       '/offer': 'http://localhost:8080',
       '/health': 'http://localhost:8080',
+      '/chat': 'http://localhost:8080',
     },
   },
 })

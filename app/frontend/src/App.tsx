@@ -67,7 +67,11 @@ function App() {
             </Row>
           </div>
 
-          {activePage === 'chat' && <ChatPage />}
+          {activePage === 'chat' && (
+            <div className={styles.chatWrapper}>
+              <ChatPage backendUrl={config.url} />
+            </div>
+          )}
       </Layout.Content>
       </Layout>
     </Layout>
