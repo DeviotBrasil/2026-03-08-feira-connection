@@ -1,4 +1,4 @@
-import { Alert, Badge, Card, Skeleton, Statistic } from 'antd';
+import { Alert, Card, Skeleton } from 'antd';
 import type { HealthData } from '../types';
 import styles from './HealthPanel.module.css';
 
@@ -18,6 +18,27 @@ function fmtUptime(seconds: number): string {
   if (h > 0) return `${h}h ${m}m`;
   if (m > 0) return `${m}m ${s}s`;
   return `${s}s`;
+}
+
+type DotStatus = 'ok' | 'warn' | 'err';
+
+interface MetricItemProps {
+  label: string;
+  value: string | number;
+  color?: string;
+  dot?: DotStatus;
+}
+
+function MetricItem({ label, value, color, dot }: MetricItemProps) {
+  return (
+    <div className={styles.metricItem}>
+      <span className={styles.metricLabel}>{label}</span>
+      <span className={styles.metricValue} style={color ? { color } : undefined}>
+        {dot && <span className={`${styles.dot} ${styles[`dot${dot.charAt(0).toUpperCase() + dot.slice(1)}`]}`} />}
+        {value}
+      </span>
+    </div>
+  );
 }
 
 export function HealthPanel({ health, healthError }: HealthPanelProps) {
@@ -45,58 +66,37 @@ export function HealthPanel({ health, healthError }: HealthPanelProps) {
   const errColor = '#ff4d4f';
 
   return (
-    <Card
-      size="small"
-      className={styles.panel}
-    >
+    <Card size="small" className={styles.panel}>
       <div className={styles.metricsRow}>
-        <div className={styles.metricItem}>
-          <Badge
-            status={health.status === 'ok' ? 'success' : 'warning'}
-            text={
-              <Statistic
-                title="Backend"
-                value={health.status.toUpperCase()}
-                valueStyle={{ color: health.status === 'ok' ? okColor : warnColor, fontSize: '0.85rem' }}
-              />
-            }
-          />
-        </div>
-        <div className={styles.metricItem}>
-          <Statistic
-            title="ZMQ"
-            value={health.zmq_connected ? 'ok' : 'offline'}
-            valueStyle={{ color: health.zmq_connected ? okColor : errColor, fontSize: '0.85rem' }}
-          />
-        </div>
-        <div className={styles.metricItem}>
-          <Statistic
-            title="Peers"
-            value={health.peers_active}
-            valueStyle={{ fontSize: '0.85rem' }}
-          />
-        </div>
-        <div className={styles.metricItem}>
-          <Statistic
-            title="FPS ZMQ"
-            value={fmt(health.fps_recent)}
-            valueStyle={{ color: health.fps_below_threshold ? warnColor : okColor, fontSize: '0.85rem' }}
-          />
-        </div>
-        <div className={styles.metricItem}>
-          <Statistic
-            title="Frames"
-            value={health.frames_received}
-            valueStyle={{ fontSize: '0.85rem' }}
-          />
-        </div>
-        <div className={styles.metricItem}>
-          <Statistic
-            title="Uptime"
-            value={fmtUptime(health.uptime_seconds)}
-            valueStyle={{ fontSize: '0.85rem' }}
-          />
-        </div>
+        <MetricItem
+          label="Backend"
+          value={health.status.toUpperCase()}
+          color={health.status === 'ok' ? okColor : warnColor}
+          dot={health.status === 'ok' ? 'ok' : 'warn'}
+        />
+        <MetricItem
+          label="ZMQ"
+          value={health.zmq_connected ? 'OK' : 'OFFLINE'}
+          color={health.zmq_connected ? okColor : errColor}
+          dot={health.zmq_connected ? 'ok' : 'err'}
+        />
+        <MetricItem
+          label="Peers"
+          value={health.peers_active}
+        />
+        <MetricItem
+          label="FPS"
+          value={fmt(health.fps_recent)}
+          color={health.fps_below_threshold ? warnColor : okColor}
+        />
+        <MetricItem
+          label="Frames"
+          value={health.frames_received.toLocaleString()}
+        />
+        <MetricItem
+          label="Uptime"
+          value={fmtUptime(health.uptime_seconds)}
+        />
       </div>
     </Card>
   );

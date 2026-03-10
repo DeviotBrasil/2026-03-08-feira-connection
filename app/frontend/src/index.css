@@ -1,21 +1,14 @@
 /* ── Variáveis de marca ─────────────────────────────────────────── */
 :root {
-  --brand-green:      #5FED00;
-  --brand-green-dim:  rgba(95, 237, 0, 0.18);
-  --brand-green-glow: rgba(95, 237, 0, 0.35);
-  --bg-page:          #0a0a0a;
-  --bg-surface:       #141414;
-  --bg-surface-2:     #1c1c1c;
-  --text-primary:     #ffffff;
-  --text-secondary:   rgba(255, 255, 255, 0.55);
-  --border-subtle:    rgba(95, 237, 0, 0.22);
+  --brand-green:      #6bbf3e;
+  --brand-green-dim:  rgba(107, 191, 62, 0.15);
+  --brand-green-glow: rgba(107, 191, 62, 0.20);
+  --border-subtle:    rgba(107, 191, 62, 0.18);
 
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color-scheme: dark;
-  color: var(--text-primary);
-  background-color: var(--bg-page);
+  color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -28,7 +21,6 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: var(--bg-page);
 }
 
 /* ── Video overlay ───────────────────────────────────────────────── */

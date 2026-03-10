@@ -1,18 +1,43 @@
 import { theme } from 'antd';
 import type { ThemeConfig } from 'antd';
 
-export const appTheme: ThemeConfig = {
+const shared = {
+  token: {
+    colorPrimary: '#6bbf3e',
+    boxShadow: 'none',
+    boxShadowSecondary: 'none',
+  },
+};
+
+export const lightTheme: ThemeConfig = {
+  ...shared,
+  components: {
+    Layout: {
+      headerBg: '#f7f7f5',
+      bodyBg: '#efefed',
+    },
+  },
+};
+
+export const darkTheme: ThemeConfig = {
+  ...shared,
   algorithm: theme.darkAlgorithm,
   token: {
-    colorPrimary: '#5FED00',
-    colorBgBase: '#0a0a0a',
-    colorBgContainer: '#141414',
-    colorBgElevated: '#1c1c1c',
-    colorBorder: 'rgba(95, 237, 0, 0.22)',
+    ...shared.token,
+    colorBgContainer: '#1e1e1e',
+    colorBgElevated: '#262626',
+    colorBgLayout: '#161616',
   },
   components: {
     Layout: {
-      headerBg: '#ffffff',
+      headerBg: '#1a1a1a',
+      bodyBg: '#161616',
+      siderBg: '#1a1a1a',
+    },
+    Menu: {
+      darkItemBg: '#1a1a1a',
+      darkItemSelectedBg: '#2e2e2e',
+      darkSubMenuItemBg: '#161616',
     },
   },
 };
